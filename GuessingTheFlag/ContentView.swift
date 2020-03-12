@@ -32,7 +32,7 @@ struct ContentView: View {
     
     @State private var rotationAmount = 0.0
     @State private var opacity = 1.0
-    @State private var isScaled = false
+    @State private var isWrongChoise = false
     
     var body: some View {
         ZStack {
@@ -55,8 +55,8 @@ struct ContentView: View {
                     }
                     .rotation3DEffect(.degrees(number == self.correctAnswer ? self.rotationAmount : 0), axis: (x: 0, y: 1, z: 0))
                     .opacity(number != self.correctAnswer ? self.opacity : 1.0)
-                    .scaleEffect(self.isScaled ? 0.5 : 1.0)
-                }
+                    .rotation3DEffect(.degrees(self.isWrongChoise ? 90 : 0), axis: (x: 0, y: 1, z: 0))
+                 }
                 Text("Score: \(score)")
                     .font(.headline)
                     .foregroundColor(.white)
@@ -80,7 +80,8 @@ struct ContentView: View {
             score += 1
         } else {
             withAnimation(.easeInOut(duration: 1)) {
-                self.isScaled.toggle()
+                self.isWrongChoise.toggle()
+                print(isWrongChoise)
             }
             scoreTitle = "Wrong! That's a flag of \(countries[number])"
             if score > 0 {
@@ -94,8 +95,11 @@ struct ContentView: View {
         countries.shuffle()
         correctAnswer = Int.random(in: 0 ... 2)
         opacity = 1.0
-        if isScaled {
-            self.isScaled.toggle()
+        if isWrongChoise {
+            withAnimation(.easeInOut(duration: 1)) {
+                self.isWrongChoise.toggle()
+                print(isWrongChoise)
+            }
         }
     }
 }
